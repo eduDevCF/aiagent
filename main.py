@@ -8,10 +8,12 @@ def main():
     ### CLI ###
     parser = argparse.ArgumentParser(description="Chatbot")
     parser.add_argument("user_prompt", type=str, help="User prompt")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     # Get user input for message to agent
     args = parser.parse_args()
-
-    # print(args.user_prompt)
+    messages = [
+        {"role": "user", "content": args.user_prompt},
+    ]
 
     ### CONNECT TO OPENROUTER ###
     load_dotenv()
@@ -26,17 +28,14 @@ def main():
 
     response = client.chat.completions.create(
         model="openrouter/free",
-        messages=[
-            {
-                "role": "user",
-                "content": args.user_prompt,
-            }
-        ],
+        messages=messages,
     )
-    if response.usage != None:
+
+    if args.verbose:
+        print(f"User prompt: {args.user_prompt}")
         print(f"Prompt tokens: {response.usage.prompt_tokens}")
         print(f"Response tokens: {response.usage.completion_tokens}")
-    else:
+    if response.usage is None:
         raise RuntimeError("Possible API request failure. No usage property in API response.")
     
     print("Response:")
