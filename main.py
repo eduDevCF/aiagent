@@ -1,9 +1,19 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+import argparse
 
 
 def main():
+    ### CLI ###
+    parser = argparse.ArgumentParser(description="Chatbot")
+    parser.add_argument("user_prompt", type=str, help="User prompt")
+    # Get user input for message to agent
+    args = parser.parse_args()
+
+    # print(args.user_prompt)
+
+    ### CONNECT TO OPENROUTER ###
     load_dotenv()
     api_key = os.environ.get("OPENROUTER_API_KEY")
     if api_key is None:
@@ -19,7 +29,7 @@ def main():
         messages=[
             {
                 "role": "user",
-                "content": "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum.",
+                "content": args.user_prompt,
             }
         ],
     )
