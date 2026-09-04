@@ -9,6 +9,7 @@ def main():
     parser = argparse.ArgumentParser(description="Chatbot")
     parser.add_argument("user_prompt", type=str, help="User prompt")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
+    
     # Get user input for message to agent
     args = parser.parse_args()
     messages = [
@@ -18,7 +19,7 @@ def main():
     ### CONNECT TO OPENROUTER ###
     load_dotenv()
     api_key = os.environ.get("OPENROUTER_API_KEY")
-    if api_key is None:
+    if not api_key:
         raise RuntimeError("could not find API key in .env")
 
     client = OpenAI(

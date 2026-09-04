@@ -13,8 +13,8 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
         else:
             return results_header + format_results(target_dir, directory)
             # return f'Success: "{directory}" is within the working directory'
-    except:
-        return f"    Error: Something went wrong when trying to get file info with these directories"
+    except Exception as e:
+        return f"    Error: Something went wrong when trying to list these files: {e}"
 
 
 def validate_path(working_directory: str, target_dir: str) -> (bool, str):
@@ -46,6 +46,6 @@ def format_results(target_dir: str, directory: str) -> str:
             is_dir = os.path.isdir(file_abs_path)
             file_info += f"\n  - {file}: file_size={file_size} bytes, is_dir={is_dir}"
         except:
-            return f"{info_result}\nError: could not access info for '{file}' in {directory}' in '{target_dir}'"
+            return f"\nError: could not access info for '{file}' in {directory}' in '{target_dir}'"
 
     return file_info
