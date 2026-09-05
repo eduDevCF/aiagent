@@ -14,6 +14,7 @@ schema_get_file_content = {
                     "type": "string",
                     "description": "The file path of the file to be read within the working directory",
                 },
+            "required": ["file_path"],
             },
         },
     },

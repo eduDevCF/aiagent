@@ -1,6 +1,31 @@
 import os, subprocess
 from functions.get_files_info import validate_path
 
+schema_run_python_file = {
+    "type": "function",
+    "function": {
+        "name": "run_python_file",
+        "description": "Run a python file given a file path and a list of args as a subprocess",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "The file path of the Python file to be run",
+                },
+                "args": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                    },
+                    "description": "To call a function with arguments, pass them as an array whose items are strings. The default is an empty array: []"
+                },
+                "required": ["file_path"],
+            },
+        },
+    },
+}
+
 def run_python_file(working_directory: str, file_path: str, args: list=[]) -> str:
     try:
         path_is_valid, abs_path = validate_path(working_directory, file_path)

@@ -52,8 +52,11 @@ def main():
             function_args = json.loads(tool_call.function.arguments or {})
             print(f"Calling function: {tool_call.function.name}({function_args})")
     
-    print("Response:")
+    print("Response:\n")
     print(response.choices[0].message.content)
+    # print("\nTool Calls:\n")
+    # print(message.tool_calls)
+
 
     # logging attempt
     # print(response)
