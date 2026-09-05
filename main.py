@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+from prompts import system_prompt
 import argparse
 
 
@@ -13,6 +14,7 @@ def main():
     # Get user input for message to agent
     args = parser.parse_args()
     messages = [
+        {"role": "system", "content": system_prompt},
         {"role": "user", "content": args.user_prompt},
     ]
 
@@ -30,12 +32,14 @@ def main():
     response = client.chat.completions.create(
         model="openrouter/free",
         messages=messages,
+        temperature=0,
     )
 
     if args.verbose:
         print(f"User prompt: {args.user_prompt}")
         print(f"Prompt tokens: {response.usage.prompt_tokens}")
         print(f"Response tokens: {response.usage.completion_tokens}")
+
     if response.usage is None:
         raise RuntimeError("Possible API request failure. No usage property in API response.")
     
