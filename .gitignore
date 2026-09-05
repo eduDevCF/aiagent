@@ -9,4 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
+# private
 .env
+
+# logging
+responses.txt

@@ -1,8 +1,10 @@
-import os
+import os, argparse, json
 from dotenv import load_dotenv
 from openai import OpenAI
 from prompts import system_prompt
-import argparse
+from call_functions import available_functions
+from functions.write_file import write_file
+from functions.get_file_content import get_file_content
 
 
 def main():
@@ -33,6 +35,7 @@ def main():
         model="openrouter/free",
         messages=messages,
         temperature=0,
+        tools=available_functions,
     )
 
     if args.verbose:
@@ -43,8 +46,21 @@ def main():
     if response.usage is None:
         raise RuntimeError("Possible API request failure. No usage property in API response.")
     
+    message = response.choices[0].message
+    if message.tool_calls:
+        for tool_call in message.tool_calls:
+            function_args = json.loads(tool_call.function.arguments or {})
+            print(f"Calling function: {tool_call.function.name}({function_args})")
+    
     print("Response:")
     print(response.choices[0].message.content)
+
+    # logging attempt
+    # print(response)
+    past_responses = get_file_content(".", "responses.txt", no_max=True)
+    past_responses += "\n" + str(response) + "\n######"
+    write_file(".", "responses.txt", past_responses)
+    # end logging
 
 
 if __name__ == "__main__":
